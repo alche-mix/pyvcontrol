@@ -25,6 +25,97 @@ UNIT = 'unit'
 LENGTH = 'length'
 ADDRESS = 'address'
 
+VITOCAL_300G = {
+# WPR300
+
+    # All Parameters are tested and working on Vitocal 200S WO1C (Baujahr 2019)
+    'Test': {ADDRESS: '0104', LENGTH: 2, UNIT: 'IS10'},
+
+    # ------ Statusinfos (read only) ------
+
+    # Warmwasser: Warmwassertemperatur oben (0..95)
+    'Warmwassertemperatur': {ADDRESS: '010d', LENGTH: 2, UNIT: 'IS10'},
+
+    # Aussentemperatur (-40..70)
+    'Aussentemperatur': {ADDRESS: '0101', LENGTH: 2, UNIT: 'IS10'},
+
+    # Heizkreis HK1: Vorlauftemperatur Sekundaer 1 (0..95)
+    'VorlauftempPrim': {ADDRESS: '0103', LENGTH: 2, UNIT: 'IS10'},
+
+    # Ruecklauftemperatur Sekundaer 1 (0..95)
+    'RuecklauftempPrim': {ADDRESS: '0104', LENGTH: 2, UNIT: 'IS10'},
+
+
+
+
+
+    # Heizkreis HK1: Vorlauftemperatur Sekundaer 1 (0..95)
+    'VorlauftempSek': {ADDRESS: '0105', LENGTH: 2, UNIT: 'IS10'},
+
+    # Ruecklauftemperatur Sekundaer 1 (0..95)
+    'RuecklauftempSek': {ADDRESS: '0106', LENGTH: 2, UNIT: 'IS10'},
+
+    # Sekundaerpumpe [%] (including one status byte)
+    'Sekundaerpumpe': {ADDRESS: 'B421', LENGTH: 2, UNIT: 'IUNON'},
+
+    # Faktor Energiebilanz(1 = 0.1kWh, 10 = 1kWh, 100 = 10kWh)
+    'FaktorEnergiebilanz': {ADDRESS: '163F', LENGTH: 1, UNIT: 'IUNON'},
+
+    # Heizwärme  "Heizbetrieb", Verdichter 1
+    'Heizwaerme': {ADDRESS: '1640', LENGTH: 4, UNIT: 'IUNON'},
+
+    # Elektroenergie "Heizbetrieb", Verdichter 1
+    'Heizenergie': {ADDRESS: '1660', LENGTH: 4, UNIT: 'IUNON'},
+
+    # Heizwärme  "WW-Betrieb", Verdichter 1
+    'WWwaerme': {ADDRESS: '1650', LENGTH: 4, UNIT: 'IUNON'},
+
+    # Elektroenergie "WW-Betrieb", Verdichter 1
+    'WWenergie': {ADDRESS: '1670', LENGTH: 4, UNIT: 'IUNON'},
+
+    # Verdichter [%] (including one status byte)
+    'Verdichter': {ADDRESS: 'B423', LENGTH: 4, UNIT: 'IUNON'},
+
+    # Druck Sauggas [bar] (including one status byte) - Kühlmittel
+    'DruckSauggas': {ADDRESS: 'B410', LENGTH: 3, UNIT: 'IS10'},
+
+    # Druck Heissgas [bar] (including one status byte)- Kühlmittel
+    'DruckHeissgas': {ADDRESS: 'B411', LENGTH: 3, UNIT: 'IS10'},
+
+    # Temperatur Sauggas [bar] (including one status byte)- Kühlmittel
+    'TempSauggas': {ADDRESS: 'B409', LENGTH: 3, UNIT: 'IS10'},
+
+    # Temperatur Heissgas [bar] (including one status byte)- Kühlmittel
+    'TempHeissgas': {ADDRESS: 'B40A', LENGTH: 3, UNIT: 'IS10'},
+
+    # Anlagentyp (muss 204D sein)
+    'Anlagentyp': {ADDRESS: '00F8', LENGTH: 4, UNIT: 'DT'},
+
+    # --------- Menüebene -------
+
+    # Betriebsmodus
+    'Betriebsmodus': {ADDRESS: 'B000', LENGTH: 1, UNIT: 'BA', ACCESS_MODE: 'write'},
+
+    # getManuell / setManuell -- 0 = normal, 1 = manueller Heizbetrieb, 2 = 1x Warmwasser auf Temp2
+    'WWeinmal': {ADDRESS: 'B020', LENGTH: 1, UNIT: 'OO', ACCESS_MODE: 'write'},
+
+    # Warmwassersolltemperatur (10..60 (95))
+    'SolltempWarmwasser': {ADDRESS: '6000', LENGTH: 2, UNIT: 'IS10', ACCESS_MODE: 'write', 'min_value': 10,
+                           'max_value': 60},
+
+    # --------- Codierebene 2 ---------
+
+    # Hysterese Vorlauf ein: Verdichter schaltet im Heizbetrieb ein
+    'Hysterese_Vorlauf_ein': {ADDRESS: '7304', LENGTH: 2, UNIT: 'IU10', ACCESS_MODE: 'write'},
+
+    # Hysterese Vorlauf aus: Verdichter schaltet im Heizbetrieb ab
+    'Hysterese_Vorlauf_aus': {ADDRESS: '7313', LENGTH: 2, UNIT: 'IU10', ACCESS_MODE: 'write'},
+
+    # --------- Function Call --------
+    'Energiebilanz': {ADDRESS: 'B800', LENGTH: 16, UNIT: 'F_E', ACCESS_MODE: 'call'},
+
+}
+
 VITOCAL_WO1C = {
     # All Parameters are tested and working on Vitocal 200S WO1C (Baujahr 2019)
 
@@ -113,7 +204,7 @@ class viCommand(bytearray):
 
     # =============================================================
     # CHANGE YOUR COMMAND SET HERE:
-    command_set = VITOCAL_WO1C
+    command_set = VITOCAL_300G
 
     # =============================================================
 
