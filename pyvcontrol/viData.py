@@ -43,6 +43,7 @@ class viData(bytearray):
     # IS10  : Int signed, base 10 (i.e. 1 digit fixed point)
     # IU10  : Int unsigned, base 10 (i.e. 1 digit fixed point)
     # IUNON : Int unsigned, no base
+    # ISNON : Int signed, no base
     # IU3600: Int unsigned, base 3600 (i.e. hours & seconds)
     # OO    : On Off,
     # RT    : Return Type
@@ -110,6 +111,7 @@ class viData(bytearray):
         datatype_object = {'BA': viDataBA, 'DT': viDataDT, 'IS10': viDataIS10, 'IU10': viDataIU10,
                            'IU3600': viDataIU3600, 'IUNON': viDataIUNON, 'RT': viDataRT, 'OO': viDataOO,
                            'ES': viDataES, 'F_E': viDataEnergy,
+                           'ISNON':viDataISNON, 'IS100':viDataIS100
                            }
         if datatype in datatype_object.keys():
             return datatype_object[datatype](*args)
@@ -314,6 +316,42 @@ class viDataIS10(viData):
     @property
     def value(self):
         return int.from_bytes(self, 'little', signed=True) / 10
+
+class viDataIS100(viData):
+    # IS100 - signed fixed-point integer, 1 decimal
+    unit = {'code': 'IS100', 'description': 'INT signed 10', 'unit': ''}
+
+    def __init__(self, value=b'\x00\x00', len=2):
+        # sets int representation based on input value
+        self.len = len  # length in bytes
+        super().__init__(value)
+
+    def _create_from_value(self, value):
+        # fixed-point number given
+        # FIXME Is it ok to overwrite its own value or should a new object be returned?
+        super().extend(int(value * 10).to_bytes(self.len, 'little', signed=True))
+
+    @property
+    def value(self):
+        return int.from_bytes(self, 'little', signed=True) / 100
+
+class viDataISNON(viData):
+    # ISNON - signed fixed-point integer, 0 decimal
+    unit = {'code': 'ISNON', 'description': 'INT signed 1', 'unit': ''}
+
+    def __init__(self, value=b'\x00\x00', len=2):
+        # sets int representation based on input value
+        self.len = len  # length in bytes
+        super().__init__(value)
+
+    def _create_from_value(self, value):
+        # fixed-point number given
+        # FIXME Is it ok to overwrite its own value or should a new object be returned?
+        super().extend(int(value).to_bytes(self.len, 'little', signed=True))
+
+    @property
+    def value(self):
+        return int.from_bytes(self, 'little', signed=True) 
 
 
 class viDataIU10(viData):
